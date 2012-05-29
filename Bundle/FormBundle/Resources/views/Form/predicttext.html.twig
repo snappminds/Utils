@@ -1,0 +1,45 @@
+{% block predicttext_widget %}
+{% spaceless %}
+<style>
+    .snappminds_utils_form_type_predicttext_choicelist-container
+    {
+        height: 100px;
+        margin-bottom: -100px;
+        border: 1px solid #000;
+        overflow: scroll;
+        display: none;
+        background-color: #FFF;
+        position: relative;
+    }
+    .snappminds_utils_form_type_predicttext_choice
+    {
+        cursor: pointer;
+    }
+    .snappminds_utils_form_type_predicttext_choice_selected
+    {
+        background-color: lightsteelblue;
+    }
+</style>
+<script>
+    var {{ id }};
+    $(document).ready(function() {
+        {{ id }} = $('#{{ id }}');
+                
+        var widget = {{ id }};
+                
+        
+        //Agregar los métodos necesarios.
+        $.extend(widget, new Snappminds.Utils.Form.Type.PredictText());
+
+        widget.initialize('{{ id }}', '{{ path(data_route.route, data_route.params) }}', '{{ data_param }}');
+    });
+    </script>
+    <div id="{{ id }}">         
+        <input type="text" id="{{ id }}_value" name="{{ full_name }}" value="{{ value }}" autocomplete="off" />
+        <div class="snappminds_utils_form_type_predicttext_choicelist-container">
+            <ul class="snappminds_utils_form_type_predicttext_choicelist">
+            </ul>            
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock %}

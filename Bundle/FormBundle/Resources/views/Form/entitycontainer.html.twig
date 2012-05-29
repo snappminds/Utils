@@ -1,0 +1,20 @@
+{#
+    EntityContainerType Template
+    Esta plantilla se aplica al widget "entitycontainer" para formularios.
+ #}
+
+
+{% block entitycontainer_widget %}
+{% spaceless %}
+    <div id="{{ id }}" {% for attrname,attrvalue in attr %}{{attrname}}="{{attrvalue}}" {% endfor %}>
+        {{ block('widget_entitycontainer_displayvalue') }}
+        <input name="{{ full_name }}" type="hidden" {{ block('widget_attributes') }} value="{{ value }}" />
+    </div>
+{% endspaceless %}
+{% endblock entitycontainer_widget %}
+
+{% block widget_entitycontainer_displayvalue %}
+    {{ display_value }}
+{% endblock widget_entitycontainer_displayvalue %}
+
+

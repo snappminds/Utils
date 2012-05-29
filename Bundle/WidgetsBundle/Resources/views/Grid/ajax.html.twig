@@ -1,0 +1,9 @@
+{
+	"data": "{% filter replace({'"': '\\"', '\n':''})|raw %}{% spaceless %}{{ grid_data(grid) }}{% endspaceless %}{% endfilter %}",
+	"page": "{{ grid.vars.currentPage }}",
+	"pageCount": "{{ grid.vars.pageCount }}",
+	"totalRowCount" : "{{ grid.vars.rowCount }}",
+        "firstRowNumber" : "{{ grid.vars.firstRowNumber }}",
+        "lastRowNumber" : "{{ grid.vars.lastRowNumber }}"
+}
+

@@ -1,0 +1,22 @@
+        
+{% block viewStateLink %}
+    <div class='viewstate-link' >
+    <input {% if class is not null %}class='{{ class }}'{% endif %} type="button" value="{{ title }}" title="{{ title }}" onclick="javascript: {{ block('viewStateRedirect') }}"/>
+    </div>
+{% endblock %}
+
+{% block viewStateRedirect %}
+    Snappminds.Utils.Blues.ViewState.redirect('{{ url }}',null);
+{% endblock %}
+
+{% block viewStateHidden %}
+
+    <script type="text/javascript">
+        
+        $(document).ready(function() {	
+            Snappminds.Utils.Blues.ViewState.renderHiddenViewState('{{ formView.vars.id }}', snappminds_utils_blues_viewstate_viewstate);
+        });        
+        
+    </script>
+        
+{% endblock %}

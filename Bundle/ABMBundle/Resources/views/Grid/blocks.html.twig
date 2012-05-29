@@ -1,0 +1,33 @@
+{% extends 'SnappmindsWidgetsBundle:Grid:ajax-blocks.html.twig' %}
+
+{% block actionlinkcolumn_SnappmindsUtilsABMBundleABMDeleteAction_template  %}
+    {% set params = params|merge(action.params) %}
+
+    {% set action_query_params %}
+        {% for name, val in action.params %}					
+            {{ name }}={{ val }}&
+        {% endfor %}
+    {% endset %}
+
+    {% if action.url is defined %}
+        {% set url %}
+            {{ action.url }}?{{ action_query_params }}{{ query_params }}
+        {% endset %}
+    {% endif %}
+    {% if action.route is defined %}
+        {% set url %}
+            {{ path(action.route, params) }}
+        {% endset %}            
+    {% endif %}
+                
+    <input type='button' title='Eliminar' class='snappminds_utils_widget_grid_actionlinkcolumn snappminds_utils_widget_grid_actionlinkcolumn_{{ action.name }}' onclick="javascript: if ( confirm('Esta seguro?') ) {{ viewstate_redirect( url ) }}" />
+{% endblock %}   
+    
+ {% block grid_javascript %}
+
+    <script>
+        $(document).ready(function() {	
+                var grid = new Snappminds.Utils.Widget.Grid.Grid('{{ grid.vars.id }}', '{{ parent.action_url(grid, { 'criteria' : grid.vars.criteria}, {}) }}');
+        });		
+    </script>
+{% endblock %}

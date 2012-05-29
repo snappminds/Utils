@@ -1,0 +1,53 @@
+{% extends 'SnappmindsWidgetsBundle:Grid:blocks.html.twig' %}
+
+{% block grid_javascript %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {	
+                var grid = new Snappminds.Utils.Widget.Grid.Grid('{{ grid.vars.id }}', '{{ parent.action_url(grid, {}, {}) }}');
+        });		
+    </script>
+{% endblock %}
+        
+{% block grid %}
+{% import "SnappmindsWidgetsBundle:Grid:blocks.html.twig" as parent %}
+    {{ block ('grid_javascript') }}
+    <div id="snappminds_utils_widget_grid_{{ grid.vars.id }}">
+        <div>            
+            <table>
+                <thead>
+                    <tr>
+                        {{ grid_headers(grid) }}
+                    </tr>
+                </thead>
+                <tbody>		
+                </tbody>
+            </table>
+        </div>
+        <div>
+            {{ block('state_info') }}
+        </div>
+        <div>
+            {{ block('paginator') }}
+        </div>
+        
+    </div>
+{% endblock %}
+
+{% block paginator %}
+{% import "SnappmindsWidgetsBundle:Grid:blocks.html.twig" as parent %}
+    <ul class="snappminds_utils_widget_grid_paginator">
+        <li class="snappminds_utils_widget_grid_paginator_first">
+            <a>|&lt;</a>
+        </li>
+        <li class="snappminds_utils_widget_grid_paginator_previous">
+            <a>&lt;</a>
+        </li>
+        <li class="snappminds_utils_widget_grid_paginator_next">
+            <a>&gt;</a>
+        </li>
+        <li class="snappminds_utils_widget_grid_paginator_last">
+            <a>&gt;|</a>
+        </li>
+    </ul>
+{% endblock %}

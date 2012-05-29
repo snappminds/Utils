@@ -1,0 +1,28 @@
+{% extends parentTemplateName %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{% render "SnappmindsWidgetsBundle:Default:headers"  %}
+	{% render "SnappmindsUtilsFormBundle:Default:headers" %}
+{% endblock %}
+
+{% block content %}        
+
+        {{ breadcrumb_widget( breadcrumb ) }}
+
+        {% block SnappmindsUtilsABMBundle_ABM_header %}
+            <h1>{% block SnappmindsUtilsABMBundle_ABM_title %}{% endblock %}</h1>
+        {% endblock %}
+        {% block SnappmindsUtilsABMBundle_ABM_body %}
+        {% endblock %}
+{% endblock %}
+
+{% block flash_messages %}
+{% spaceless %}
+    {% for key, flash in app.session.getFlashes() %}
+    <div class="{{ key }} snappminds_flash">
+        {{ flash }}
+    </div>
+    {% endfor %}
+{% endspaceless %}
+{% endblock flash_messages %}            

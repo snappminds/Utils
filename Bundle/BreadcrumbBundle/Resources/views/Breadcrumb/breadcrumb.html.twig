@@ -1,0 +1,37 @@
+        
+{% block breadcrumb %}
+
+    {% set last = breadcrumb.vars.count - 1 %}
+    {% set i = 0 %}
+
+    {% if breadcrumb.vars.count > 1 %}
+
+    <div class='breadcrumb'>
+
+    {% for item in breadcrumb.vars.items %}
+
+        {% if i == last %}
+
+            <div class='breadcrumb-current-item'> 
+                {{ item.title }}
+            </div>
+
+        {% else %}
+            
+            <div class='breadcrumb-hierarchical-item'>
+                {{ viewstate_link( item.title ,  path( item.routeData.route, item.routeData.params ) ) }}
+            </div>            
+
+            <div class='breadcrumb-hierarchy-separator'> 
+                {{ breadcrumb.vars.hierarchySeparator }}        
+            </div>
+        {% endif %}
+
+        {% set i = i + 1 %}
+    {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+{% endblock %}

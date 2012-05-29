@@ -1,0 +1,40 @@
+parameters:  
+#    snappminds_utils_form.example.class: Snappminds\Utils\Bundle\FormBundle\Example
+  form.type.choice.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\ChoiceType
+  form.type.entity.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\EntityType
+  form.type.entityhidden.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\EntityHiddenType
+  form.type.predicttext.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\PredictTextType
+  form.type.entitypredicttext.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\EntityPredictTextType
+  form.type.entitycontainer.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\EntityContainerType
+services:
+#    snappminds_utils_form.example:
+#        class: %snappminds_utils_form.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+  form.type.choice:
+    class: %form.type.choice.class%
+    tags:
+      - { name: form.type, alias: choice }
+  form.type.entity:
+    class: %form.type.entity.class%
+    arguments: [@doctrine]
+    tags:
+      - { name: form.type, alias: entity }
+  form.type.entityhiddem:
+    class: %form.type.entityhidden.class%
+    arguments: [@doctrine]
+    tags:
+      - { name: form.type, alias: entityhidden }
+  form.type.predicttext:
+    class: %form.type.predicttext.class%
+    tags:
+      - { name: form.type, alias: predicttext }
+  form.type.entitypredicttext:
+    class: %form.type.entitypredicttext.class%
+    arguments: [@doctrine]
+    tags:
+      - { name: form.type, alias: entitypredicttext }
+  form.type.entitycontainer:
+    class: %form.type.entitycontainer.class%
+    arguments: [@doctrine]
+    tags:
+      - { name: form.type, alias: entitycontainer }

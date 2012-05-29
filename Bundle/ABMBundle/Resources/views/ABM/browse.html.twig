@@ -1,0 +1,41 @@
+{% extends 'SnappmindsUtilsABMBundle:ABM:common.html.twig' %}
+
+{% block SnappmindsUtilsABMBundle_ABM_title %}
+{{ title }}
+{% endblock %}
+
+{% block SnappmindsUtilsABMBundle_ABM_body %}
+
+    {% if filterForm is defined %}
+
+    <div class='filterSection'>
+        
+        {% block SnappmindsUtilsABMBundle_ABM_filter_title %}
+        <h2>Busqueda</h2>
+        {% endblock %}
+        <form action="{{ path(browseRouteName, browseRouteParams) }}" method="get" {{ form_enctype(filterForm) }}>            
+            <div class='filterForm'>
+                
+                {{ form_widget(filterForm) }}
+
+                <fieldset>
+                    <input type="submit" value='Aceptar'/>                    
+                </fieldset>            
+            </div>
+        </form>
+    </div>         
+
+    {% endif %}
+
+    <div class='gridSection'>
+
+    {{ block('flash_messages') }}         
+            
+    {% if insertRouteName is defined %}
+        {{ viewstate_link( 'Nuevo' ,  path(insertRouteName, insertRouteParams|merge(defaultRouteParams) ), 'snappminds_abm_insert_button' ) }}
+    {% endif %}
+    
+    {{ grid_widget(grid) }}
+
+    </div>       
+{% endblock %}

@@ -1,0 +1,172 @@
+{# -------------------------------------------------- macros -------------------------------------------------- #}
+{#
+	action_url
+	Genera una url para la grilla a partir de la actionRoute y los parámetros HTTP especificados.
+
+	@param grid	Vista de la grilla.
+	@param gridParams Arreglo de parámetros específicos de la grilla.
+	@param otherParams Otros parámetros si fuese necesario.
+#}
+{% macro action_url(grid, gridParams, otherParams) %}
+{% spaceless %}
+    {{ path(grid.vars.actionRoute.route, array_pair(grid.vars.id, gridParams)|merge(otherParams)|merge(grid.vars.actionRoute.params)|merge(grid.vars.defaultRouteParams) )|e('js') }}
+{% endspaceless %}
+{% endmacro %}
+{# -------------------------------------------------- grid_widget -------------------------------------------------- #}
+{% block grid %}
+    <div id="snappminds_utils_widget_grid_{{ grid.vars.id }}">
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        {{ grid_headers(grid) }}
+                    </tr>
+                </thead>
+                <tbody>		
+                    {{ grid_data(grid) }}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            {{ block('state_info') }}
+        </div>
+        <div>
+            {{ block('paginator') }}
+        </div>        
+    </div>
+{% endblock %}
+
+{% block state_info %}
+    <dl class="snappminds_utils_widget_grid_stateinfo">
+        <dt class="snappminds_utils_widget_grid_stateinfo_rowcount">
+            Mostrando registros:
+        </dt>
+        <dd class="snappminds_utils_widget_grid_stateinfo_rowcount">
+            {{ grid.vars.firstRowNumber }} a {{ grid.vars.lastRowNumber }} de {{ grid.vars.rowCount }}.
+        </dd>
+        <dt class="snappminds_utils_widget_grid_stateinfo_pagecount">
+            Página
+        </dt>
+        <dd class="snappminds_utils_widget_grid_stateinfo_pagecount">
+            {{ grid.vars.currentPage }} de {{ grid.vars.pageCount }}
+        </dd>
+    </dl>
+{% endblock %}
+
+{% block paginator %}
+    <ul class="snappminds_utils_widget_grid_paginator">
+            <li class="snappminds_utils_widget_grid_paginator_first">
+                <a href="{{ _self.action_url(grid, { 'page' : 1}, {}) }}">|&lt;</a>
+            </li>
+        {% if (grid.vars.currentPage > 1) %}
+            <li class="snappminds_utils_widget_grid_paginator_previous">
+                <a href="{{ _self.action_url(grid, { 'page' : grid.vars.currentPage - 1}, {}) }}">&lt;</a>
+            </li>
+        {% endif %}
+        {% if (grid.vars.currentPage < grid.vars.pageCount) %}
+            <li class="snappminds_utils_widget_grid_paginator_next">
+                <a href="{{ _self.action_url(grid, { 'page' : grid.vars.currentPage + 1}, {}) }}">&gt;</a>
+            </li>
+        {% endif %}
+        <li class="snappminds_utils_widget_grid_paginator_last">
+            <a href="{{ _self.action_url(grid, { 'page' : grid.vars.pageCount }, {}) }}">&gt;|</a>
+        </li>
+    </ul>
+{% endblock %}
+{# -------------------------------------------------- grid_headers -------------------------------------------------- #}
+{% block headers %}
+    {% for column in grid.vars.columns %}
+        <th>{{ column.vars.label }}</th>
+    {% endfor %}
+{% endblock %}
+{# -------------------------------------------------- grid_data -------------------------------------------------- #}
+{% block data %}
+    {% for row in grid.vars.rows %}
+        <tr>
+            {% for column in grid.vars.columns %}			
+                <td>{{ grid_cell(column, row[column.vars.name], grid) }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+{% endblock %}
+{# -------------------------------------------------- grid_cell -------------------------------------------------- #}
+{% block datetimecolumn_cell %}
+    {{ value|date('d/m/Y H:i') }}
+{% endblock %}
+
+{% block timecolumn_cell %}
+    {{ value|date('H:i') }}
+{% endblock %}
+        
+{# -------------------------------------------------- grid_cell -------------------------------------------------- #}
+{% block cell %}
+    {{ value }}
+{% endblock %}
+{# -------------------------------------------------- templatecolumn cell -------------------------------------------------- #}
+{% block templatecolumn_cell %}
+    {{ block (column.vars.blockName) }}
+{% endblock %}                
+{# -------------------------------------------------- actioncolumn cell -------------------------------------------------- #}
+{% block actioncolumn_cell %}
+    {# 
+        Heredar de templatecolumn.
+     #}
+    {{ block ('templatecolumn_cell') }}
+{% endblock %}
+{# -------------------------------------------------- actionlinkcolumn cell -------------------------------------------------- #}
+{% block actionlinkcolumn_cell %}
+    {# 
+        Heredar de templatecolumn.
+     #}
+    {{ block ('templatecolumn_cell') }}
+{% endblock %}
+
+{#
+    Template para la columna de actions
+#}
+{% block templatecolumn_actioncolumn_template %}
+        
+    {% set query_params %}
+        {% for name, val in value %}
+            {{ name }}={{ val }}&
+        {% endfor %}
+    {% endset %}
+    <ul class='actions'>
+        {% for action in column.vars.actions %}
+            {# Arreglo de parametros con data fields #}
+            {% set params = {} %}
+            {% for fieldName, paramName  in action.dataFieldParamNames %}
+                {% set params = params|merge(array_pair(paramName, value[fieldName])) %}
+            {% endfor %}
+        
+            <li>          
+                {{ block (action.blockName) }}
+            </li>            
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+   
+{#
+    Template para action de tipo link
+#}
+{% block actionlinkcolumn_action_template %}
+            
+    {% set params = params|merge(action.params)|merge(grid.vars.defaultRouteParams) %}
+            
+    {% set action_query_params %}
+        {% for name, val in action.params %}					
+            {{ name }}={{ val }}&
+        {% endfor %}
+    {% endset %}
+            
+    {% if action.url is defined %}
+        <a class="snappminds_utils_widget_grid_actionlinkcolumn snappminds_utils_widget_grid_actionlinkcolumn_{{ action.name }}" href="{{ action.url }}?{{ action_query_params }}{{ query_params }}" title='{{ action.label }}'>{{ action.label }}</a>
+    {% endif %}
+        
+    {% if action.route is defined %}
+        {% set className = 'snappminds_utils_widget_grid_actionlinkcolumn snappminds_utils_widget_grid_actionlinkcolumn_' ~ action.name %}
+        {{ viewstate_link( action.label,  path(action.route, params), className) }}
+    {% endif %}
+{% endblock %}   
+    

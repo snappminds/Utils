@@ -1,0 +1,14 @@
+.breadcrumb-hierarchy-separator{
+    float: left;
+}
+
+.breadcrumb-current-item{
+    margin-left: 5px;
+    float: left;
+}
+
+.breadcrumb{
+    float: left;
+    width: 100%;
+    margin-bottom: 30px;
+}

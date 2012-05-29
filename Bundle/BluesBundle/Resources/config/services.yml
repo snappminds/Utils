@@ -1,0 +1,9 @@
+parameters:
+    twig.extension.viewstate.class: Snappminds\Utils\Bundle\BluesBundle\Extension\Twig\ViewStateExtension
+
+services:
+    twig.extension.viewstate:
+        class: %twig.extension.viewstate.class%
+        arguments:     []
+        tags:
+            - { name: twig.extension }

@@ -1,0 +1,145 @@
+{#
+    ChoiceType Template
+    Esta plantilla se aplica al widget "choice" para formularios.
+ #}
+
+
+{% block choice_widget %}
+{% spaceless %}    
+    {% if (editable) %}
+        {#
+            Es un choice editable.
+            Esto significa que es posible escribir en una caja de texto de 
+            manera que la lista de "choices" se derive a partir de lo que 
+            escribe el usuario.
+        #}
+        {% if (is_ajax) %}
+            {#
+                Choice editable con funcionalidades AJAX.
+            #}
+<style>
+    .snappminds_utils_form_type_choice_choicelist-container
+    {
+        height: 100px;
+        margin-bottom: -100px;
+        border: 1px solid #000;
+        overflow: scroll;
+        display: none;
+        background-color: #FFF;
+        position: relative;
+    }
+    .snappminds_utils_form_type_choice_choice
+    {
+        cursor: pointer;
+    }
+    .snappminds_utils_form_type_choice_choice_selected
+    {
+        background-color: lightsteelblue;
+    }
+    </style>
+    <script>
+        var {{ id }};
+        $(document).ready(function() {
+            {{ id }} = $('#{{ id }}');
+
+            var widget = {{ id }};
+
+
+            //Agregar los métodos necesarios.
+            $.extend(widget, new Snappminds.Utils.Form.Type.Choice());
+
+            widget.initialize('{{ id }}', '{{ path(data_route.route, data_route.params) }}', '{{ data_param }}');            
+        });
+        </script>
+        <div id="{{ id }}">
+            <input id="{{ id }}_value" name="{{ full_name }}" type="hidden" value='{{ value }}'/>
+            <input id="{{ id }}_entry" type="text" autocomplete="off" value = "{{ value_label }}"/>
+            <div class="snappminds_utils_form_type_choice_choicelist-container">
+                <ul class="snappminds_utils_form_type_choice_choicelist">
+                </ul>
+            </div>
+        </div>
+        {% else %}
+            {#
+                Choice editable sin funcionalidades AJAX.
+                TODO
+            #}
+        Falta implementar esta vista
+        {% endif %}
+    {% else %}
+        {#
+            No es un choice editable.
+            Solo se muestra una lista desplegable, sin posibilidad de que el 
+            usuario ingrese información parcialmente.
+        #}
+        {% if (is_ajax) %}
+        <script>
+            var {{ id }};
+            $(document).ready(function() {
+                {{ id }} = $('#{{ id }}');
+
+                var widget = {{ id }};
+
+                //Agregar los métodos necesarios.
+                $.extend(widget,
+                    {
+                        refresh: function() {
+
+                            var url = '{{ path(data_route.route, data_route.params) }}';
+
+
+                            //Realizar llamada ajax
+                            $.ajax({
+                                url: url,
+                                context: this,
+                                success: function( data ) {
+                                    options = eval('('+ data + ')');
+
+                                    //Llenar el listado
+                                    for (var i=0; i < options.length; i++) {
+                                        $(this).append('<option value="' + options[i].id + '">' + options[i].data + '</option>');
+                                    }
+                                }
+                            });
+                        }
+                    }
+                );
+
+                widget.refresh();
+
+            });
+            </script>
+            <select {{ block('widget_attributes') }}>
+            </select>
+        {% else %}
+            {% spaceless %}
+                {% if expanded %}
+            <div {{ block('widget_container_attributes') }}>
+                    {% for child in form %}
+                        {{ form_widget(child) }}
+                        {{ form_label(child) }}
+                    {% endfor %}
+                </div>
+                {% else %}
+                <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+                    {% if empty_value is not none %}
+                        <option value="">{{ empty_value|trans }}</option>
+                    {% endif %}
+                    {% if preferred_choices|length > 0 %}
+                        {% set options = preferred_choices %}
+                        {{ block('widget_choice_options') }}
+                        {% if choices|length > 0 %}
+                        <option disabled="disabled">{{ separator }}</option>
+                        {% endif %}
+                    {% endif %}
+                    {% set options = choices %}
+                    {{ block('widget_choice_options') }}
+                    </select>
+                {% endif %}
+            {% endspaceless %}            
+        {% endif %}
+    {% endif %}
+{% endspaceless %}
+{% endblock choice_widget %}
+
+

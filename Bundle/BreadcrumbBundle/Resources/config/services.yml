@@ -1,0 +1,14 @@
+parameters:
+    snappminds_breadcrumb.class: Snappminds\Utils\Bundle\BreadcrumbBundle\Model\Breadcrumb
+    twig.extension.breadcrumb.class: Snappminds\Utils\Bundle\BreadcrumbBundle\Extension\Twig\BreadcrumbExtension
+
+services:
+    snappminds_breadcrumb:
+        class: %snappminds_breadcrumb.class%
+        arguments:     []
+
+    twig.extension.breadcrumb:
+        class: %twig.extension.breadcrumb.class%
+        arguments:     []
+        tags:
+            - { name: twig.extension }

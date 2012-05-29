@@ -1,0 +1,9 @@
+{% extends 'SnappmindsUtilsABMBundle:ABM:common.html.twig' %}
+
+{% block SnappmindsUtilsABMBundle_ABM_title %}
+{{ title }}
+{% endblock %}
+
+{% block SnappmindsUtilsABMBundle_ABM_body %}
+    {% include formTemplateName with {'form': form} %}
+{% endblock %}

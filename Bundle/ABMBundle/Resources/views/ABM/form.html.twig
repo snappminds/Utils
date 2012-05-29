@@ -1,0 +1,11 @@
+<form id='{{ form.vars.id }}' method="post" {{ form_enctype(form) }}>
+    
+    <input type='hidden' name='_form_method' value='POST'></input>        
+    
+    {{ viewstate_form_hidden(form) }}
+    
+    {{ form_widget(form) }}
+    
+    <input type="submit" value='Aceptar'/>
+    <input type="button" value='Volver' onclick="javascript: window.location='{{ path(returnRouteData.route, returnRouteData.params) }}'"/>    
+</form>

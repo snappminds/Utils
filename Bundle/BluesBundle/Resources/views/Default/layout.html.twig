@@ -1,0 +1,37 @@
+{% extends '::layout.html.twig' %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+	{% render "SnappmindsUtilsBluesBundle:ViewState:headers"  %}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+
+        {% stylesheets '@SnappmindsUtilsBluesBundle/Resources/public/css/ViewState/viewState.css' %}   	            
+        <link href="{{ asset_url }}" media="screen" rel="stylesheet" type="text/css" />
+        {% endstylesheets %}
+
+        {% stylesheets '@SnappmindsUtilsBreadcrumbBundle/Resources/public/css/breadcrumb.css' %}   	            
+        <link href="{{ asset_url }}" media="screen" rel="stylesheet" type="text/css" />
+        {% endstylesheets %}
+
+
+{% endblock %}
+
+{% block body %}
+	{{ parent() }}
+
+        <script type='text/javascript'>
+            
+            var snappminds_utils_blues_viewstate_viewstate;
+            
+            {% autoescape false %}
+                
+                snappminds_utils_blues_viewstate_viewstate = new Snappminds.Utils.Blues.ViewState.ViewState('{{ viewState.vars.requestParamName }}', '{{ viewState.vars.data }}');
+
+            {% endautoescape %}
+        </script>
+
+{% endblock %}
