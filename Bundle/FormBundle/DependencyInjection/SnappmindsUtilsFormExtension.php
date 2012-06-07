@@ -20,8 +20,20 @@ class SnappmindsUtilsFormExtension extends Extension
     public function load(array $configs, ContainerBuilder $container)
     {        
         $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);                
+        $config = $this->processConfiguration($configuration, $configs);                        
+
+        /* Se agregan los templates definidos para los widgets nuevos */
+        $resources = $container->getParameter('twig.form.resources');
         
+        $resources = array_merge($resources, array(
+            'SnappmindsUtilsFormBundle:Form:choice.html.twig',
+            'SnappmindsUtilsFormBundle:Form:predicttext.html.twig',
+            'SnappmindsUtilsFormBundle:Form:entitycontainer.html.twig'
+        ));     
+                
+        $container->setParameter('twig.form.resources', $resources);
+
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         
