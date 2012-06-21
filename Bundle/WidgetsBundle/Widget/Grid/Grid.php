@@ -48,11 +48,6 @@ abstract class Grid
         
         $this->initializeFromStateData($stateData);
 
-        
-
-        /* Definir filas por página por defecto */
-        $this->setRowsPerPage(5);
-
         $this->initialize();
     }
 

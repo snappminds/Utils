@@ -184,6 +184,10 @@ abstract class ABMController extends Controller
         
         $grid = $this->getGridInstance();
 
+        if(is_null($grid->getRowsPerPage()) ){            
+            $grid->setRowsPerPage( $this->container->getParameter('snappminds_utils_abm.grid.rows_per_page') );
+        }
+
         $grid->setActionRoute($browseRouteData['route'] . "_data", $browseRouteData['params'] );
         $grid->setDefaultRouteParams( $this->getDefaultRouteParams() );
         

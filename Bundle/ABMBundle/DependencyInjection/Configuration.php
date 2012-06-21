@@ -19,10 +19,15 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('snappminds_utils_abm');
-
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode
+            ->children()
+                ->arrayNode('grid')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('rows_per_page')->defaultValue('10')->cannotBeEmpty()->end()
+                    ->end()
+                ->end()             
+            ->end();
 
         return $treeBuilder;
     }
