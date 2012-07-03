@@ -12,7 +12,7 @@
 {% block grid %}
 {% import "SnappmindsWidgetsBundle:Grid:blocks.html.twig" as parent %}
     {{ block ('grid_javascript') }}
-    <div id="snappminds_utils_widget_grid_{{ grid.vars.id }}">
+    <div id="snappminds_utils_widget_grid_{{ grid.vars.id }}" class="{{ grid.vars.className }}">
         <div>            
             <table>
                 <thead>

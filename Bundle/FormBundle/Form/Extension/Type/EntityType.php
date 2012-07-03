@@ -8,10 +8,12 @@ use \Symfony\Component\Form\FormView;
 use \Symfony\Component\Form\FormInterface;
 use \Symfony\Bridge\Doctrine\RegistryInterface;
 use \Symfony\Bridge\Doctrine\Form\ChoiceList\EntityChoiceList;
+use \Symfony\Bridge\Doctrine\Form\EventListener\MergeCollectionListener;
+use \Symfony\Component\Form\Exception\FormException;
+use Symfony\Bridge\Doctrine\Form\DataTransformer\EntitiesToArrayTransformer;
 use \Symfony\Component\Form\Util\PropertyPath;
 use Symfony\Bridge\Doctrine\Form\DataTransformer\EntityToIdTransformer as SymfonyEntityToIdTransformer;
 use Snappminds\Utils\Bundle\FormBundle\Form\Extension\DataTransformer\EntityToIdTransformer;
-
 /**
  * 
  *
@@ -90,18 +92,20 @@ class EntityType extends AbstractType
             $view->set('ajaxresponse_data', $choices);
         }
 
+        $view->set('value_label', null);
+
         if ($form->getData()) {
-            if ($form->hasAttribute('property')) {
-                $property = new PropertyPath($form->getAttribute('property'));
-                $view->set('value_label', $property->getValue($form->getData()));
-            } else {
-                if (!method_exists($form->getData(), '__toString')) {
-                    throw new FormException('Entities passed to the choice field must have a "__toString()" method defined (or you can also override the "property" option).');
+            if (!$form->getAttribute('multiple')) {
+                if ($form->hasAttribute('property')) {
+                    $property = new PropertyPath($form->getAttribute('property'));
+                    $view->set('value_label', $property->getValue($form->getData()));
+                } else {
+                    if (!method_exists($form->getData(), '__toString')) {
+                        throw new FormException('Entities passed to the choice field must have a "__toString()" method defined (or you can also override the "property" option).');
+                    }
+                    $view->set('value_label', (string) $form->getData());
                 }
-                $view->set('value_label', (string) $form->getData());
             }
-        } else {
-            $view->set('value_label', null);
         }
     }
 

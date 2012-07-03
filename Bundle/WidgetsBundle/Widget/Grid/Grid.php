@@ -238,6 +238,7 @@ abstract class Grid
         $view->set('firstRowNumber', $firstRowNumber);
         $view->set('lastRowNumber', $lastRowNumber);
         $view->set('rows', $rows);
+	$view->set('className', '');
 
 
         $columns = array();
