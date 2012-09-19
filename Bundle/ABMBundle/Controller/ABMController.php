@@ -171,6 +171,16 @@ abstract class ABMController extends Controller
     {
         return null;
     }
+
+    /**
+     * Obtiene una instancia de la grilla a visualizar, desde el browse action.
+     * 
+     * @return Snappminds\Utils\Bundle\ABMBundle\Widget\Grid Grilla a visualizar.
+     */
+    protected function getGridInstance()
+    {
+        return null;
+    }
     
     public function getDefaultRouteParams(){
         return array();
@@ -183,6 +193,10 @@ abstract class ABMController extends Controller
         $deleteRouteData = $this->getDeleteRouteData();
         
         $grid = $this->getGridInstance();
+
+        if(is_null($grid) ){            
+	    throw new \Exception('No se encontró una instancia de una grilla para el ABM. Redefinió el metodo getGridInstance() en su controlador?');
+        }
 
         if(is_null($grid->getRowsPerPage()) ){            
             $grid->setRowsPerPage( $this->container->getParameter('snappminds_utils_abm.grid.rows_per_page') );
