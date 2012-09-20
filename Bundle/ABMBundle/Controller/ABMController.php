@@ -19,7 +19,7 @@ abstract class ABMController extends Controller
      */
     protected function getEntityInstance()
     {
-        throw new \Exception('El método getEntityInstance debe ser redefinido en la clase concreta');
+        throw new \Exception('El método getEntityInstance debe ser redefinido en la Controller concreto');
     }
 
     /**
@@ -141,6 +141,10 @@ abstract class ABMController extends Controller
      */
     protected function getInsertRouteData()
     {
+        return null;
+    }
+    
+    protected function getForm(){
         return null;
     }
 
@@ -293,7 +297,13 @@ abstract class ABMController extends Controller
     {
         $entity = $this->getEntityInstance();
 
-        $form = $this->createForm($this->getForm(), $entity);
+        $formType = $this->getForm();
+        
+        if(is_null($formType)){
+            throw new \Exception('La acción de "Alta" necesita un formulario para visualizar. Redefinió el metodo getForm() en su controlador?');            
+        }
+        
+        $form = $this->createForm( $formType, $entity);
 
         if ($request->request->has('_form_method') && ($request->request->get('_form_method') == 'POST')) {
 
