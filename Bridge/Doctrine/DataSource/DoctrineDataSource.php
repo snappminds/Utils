@@ -58,7 +58,9 @@ class DoctrineDataSource implements IDataSource
         $q = $qb->getQuery();
 
         if ($rowsPerPage) {
-            $count = Paginate::getTotalQueryResults($q);
+            if( !class_exists('DoctrineExtensions\Paginate\Paginate') ){
+                throw new \Exception('El DataSource ' . get_class($this) . ' necesita para poder paginar habilitar el bundle DoctrineExtensions. La clase DoctrineExtensions\Paginate\Paginate no fue encontrada');
+            }
             $q = Paginate::getPaginateQuery($q, ($page - 1) * $rowsPerPage, $rowsPerPage);
         }               
         
