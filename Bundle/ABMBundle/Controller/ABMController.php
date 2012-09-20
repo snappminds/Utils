@@ -195,7 +195,7 @@ abstract class ABMController extends Controller
         $grid = $this->getGridInstance();
 
         if(is_null($grid) ){            
-	    throw new \Exception('No se encontró una instancia de una grilla para el ABM. Redefinió el metodo getGridInstance() en su controlador?');
+	    	throw new \Exception('No se encontró una instancia de una grilla para el ABM. Redefinió el metodo getGridInstance() en su controlador?');
         }
 
         if(is_null($grid->getRowsPerPage()) ){            
@@ -205,14 +205,22 @@ abstract class ABMController extends Controller
         $grid->setActionRoute($browseRouteData['route'] . "_data", $browseRouteData['params'] );
         $grid->setDefaultRouteParams( $this->getDefaultRouteParams() );
         
-        if($updateRouteData && $grid->getActionColumn()->hasAction('update') ){
-            $grid->setUpdateRoute($updateRouteData['route'], $updateRouteData['params']);
+        if( $grid->getActionColumn()->hasAction('update') ){
+	    	if( is_null($updateRouteData) ){
+				throw new \Exception('La instancia de la grilla tiene definida la acción de "Edición" pero no se definió la ruta al controller. Redefinió el metodo getUpdateRoute() en su controlador?');
+			}else{
+	            $grid->setUpdateRoute($updateRouteData['route'], $updateRouteData['params']);
+			}
         }
-            
-        if($deleteRouteData && $grid->getActionColumn()->hasAction('delete') ){
-            $grid->setdeleteRoute($deleteRouteData['route'], $deleteRouteData['params']);
-        }        
-        
+
+		if( $grid->getActionColumn()->hasAction('delete') ){
+	    	if( is_null($deleteRouteData) ){
+				throw new \Exception('La instancia de la grilla tiene definida la acción de "Eliminación" pero no se definió la ruta al controller. Redefinió el metodo getDeleteRoute() en su controlador?');
+			}else{
+	            $grid->setdeleteRoute($deleteRouteData['route'], $deleteRouteData['params']);
+			}
+        }
+
         return $grid;
     }    
     
