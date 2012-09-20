@@ -14,7 +14,7 @@ class DoctrineDataSource implements IDataSource
     private $criteria = array();
            
 
-    public function __construct(EntityManager $em, $repositoryName = '')
+    public function __construct(EntityManager $em, $repositoryName = null)
     {
         $this->setEm($em);
         $this->setRepositoryName($repositoryName);
@@ -42,7 +42,13 @@ class DoctrineDataSource implements IDataSource
 
     protected function getQueryBuilder()
     {
-        return $this->getEm()->getRepository($this->getRepositoryName())->createQueryBuilder('e');
+        $repositoryName = $this->getRepositoryName();
+        if( is_null($repositoryName) ){
+                throw new \Exception('El DataSource ' . get_class($this) . ' necesita un \'repositoryName\' para poder obtener un QueryBuilder. 
+                                                        Puede especificarlo desde el constructor del DataSource ' . get_class($this) . ' o mediente el método setRepositoryName');
+        }
+        
+        return $this->getEm()->getRepository($repositoryName)->createQueryBuilder('e');
     }
 
     protected function getDataQuery($page = 1, $rowsPerPage = null)
