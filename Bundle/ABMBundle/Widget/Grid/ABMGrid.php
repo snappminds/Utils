@@ -38,6 +38,10 @@ class ABMGrid extends Grid {
         }
     }
 
+    public function hasActionColumn() {
+        return $this->hasColumn('actions');
+    }
+    
     public function getActionColumn() {
         return $this->getColumn('actions');
     }

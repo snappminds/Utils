@@ -87,6 +87,11 @@ abstract class Grid
         return $this->getColumns()->offsetGet($name);
     }
 
+    public function hasColumn($name)
+    {
+        return $this->getColumns()->offsetExists($name);
+    }
+    
     protected function setColumns(\ArrayObject $value)
     {
         $this->columns = $value;

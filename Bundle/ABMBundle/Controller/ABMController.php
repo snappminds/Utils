@@ -3,16 +3,15 @@
 namespace Snappminds\Utils\Bundle\ABMBundle\Controller;
 
 use Snappminds\Utils\Bundle\WidgetsBundle\Widget\Grid\Grid;
-
 use Snappminds\Utils\Bundle\BluesBundle\Model\ViewState;
 use Snappminds\Utils\Bundle\BluesBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-
 abstract class ABMController extends Controller
 {
-    private $filterForm;   
-    
+
+    private $filterForm;
+
     /**
      * Obtiene una instancia de la entidad sobre la que se está trabajando
      * 
@@ -22,7 +21,7 @@ abstract class ABMController extends Controller
     {
         throw new \Exception('El método getEntityInstance debe ser redefinido en la clase concreta');
     }
-    
+
     /**
      * Obtiene el nombre en singular de la entidad sobre la que se trabaja.
      * 
@@ -31,7 +30,7 @@ abstract class ABMController extends Controller
      * @return string Nombre en singular.
      */
     protected abstract function getSingularEntityName();
-    
+
     /**
      * Obtiene el nombre en plural de la entidad sobre la que se trabaja.
      * 
@@ -39,14 +38,15 @@ abstract class ABMController extends Controller
      * 
      * @return string Nombre en plural.
      */
-    protected abstract function getPluralEntityName();        
+    protected abstract function getPluralEntityName();
 
     /**
      * Obtiene el titulo para el BrowseAction     
      * 
      * @return string.
-     */    
-    protected function getBrowseActionTitle(){
+     */
+    protected function getBrowseActionTitle()
+    {
         return $this->getPluralEntityName();
     }
 
@@ -54,8 +54,9 @@ abstract class ABMController extends Controller
      * Obtiene el titulo para el InsertAction     
      * 
      * @return string.
-     */    
-    protected function getInsertActionTitle(){
+     */
+    protected function getInsertActionTitle()
+    {
         return "Alta de " . $this->getSingularEntityName();
     }
 
@@ -63,11 +64,12 @@ abstract class ABMController extends Controller
      * Obtiene el titulo para el UpdateAction     
      * 
      * @return string.
-     */    
-    protected function getUpdateActionTitle(){
+     */
+    protected function getUpdateActionTitle()
+    {
         return "Actualización de " . $this->getSingularEntityName();
     }
-    
+
     protected function getClassShortName()
     {
         $className = get_class($this);
@@ -76,7 +78,7 @@ abstract class ABMController extends Controller
         $className = str_replace("Controller", "", $className);
         return $className;
     }
-        
+
     /**
      * Obtiene el nombre del template utilizado para la vista de INSERT.
      * 
@@ -101,24 +103,22 @@ abstract class ABMController extends Controller
      * Obtiene el nombre del template utilizado para la vista de BROWSE.
      * 
      * @return string Nombre del template según convención symfony. 
-     */    
+     */
     protected function getBrowseTemplateName()
     {
         return 'SnappmindsUtilsABMBundle:ABM:browse.html.twig';
     }
 
-    
     /**
      * Obtiene el nombre del template utilizado para mostrar el formulario.
      * 
      * @return string Nombre del template según convención symfony. 
-     */    
+     */
     protected function getFormTemplateName()
     {
         return 'SnappmindsUtilsABMBundle:ABM:form.html.twig';
     }
-    
-    
+
     /**
      * Obtiene la información de la ruta a la vista BROWSE del ABM.
      * 
@@ -129,7 +129,7 @@ abstract class ABMController extends Controller
      * @return array Arreglo asociativo con información de la ruta.
      */
     protected abstract function getBrowseRouteData();
-    
+
     /**
      * Obtiene la información de la ruta a la vista INSERT del ABM.
      * 
@@ -181,63 +181,66 @@ abstract class ABMController extends Controller
     {
         return null;
     }
-    
-    public function getDefaultRouteParams(){
+
+    public function getDefaultRouteParams()
+    {
         return array();
-    }  
-        
+    }
+
     protected function getGrid()
-    {        
-        $browseRouteData = $this->getBrowseRouteData();        
+    {
+        $browseRouteData = $this->getBrowseRouteData();
         $updateRouteData = $this->getUpdateRouteData();
         $deleteRouteData = $this->getDeleteRouteData();
-        
+
         $grid = $this->getGridInstance();
 
-        if(is_null($grid) ){            
-	    	throw new \Exception('No se encontró una instancia de una grilla para el ABM. Redefinió el metodo getGridInstance() en su controlador?');
+        if (is_null($grid)) {
+            throw new \Exception('No se encontró una instancia de una grilla para el ABM. Redefinió el metodo getGridInstance() en su controlador?');
         }
 
-        if(is_null($grid->getRowsPerPage()) ){            
-            $grid->setRowsPerPage( $this->container->getParameter('snappminds_utils_abm.grid.rows_per_page') );
+        if (is_null($grid->getRowsPerPage())) {
+            $grid->setRowsPerPage($this->container->getParameter('snappminds_utils_abm.grid.rows_per_page'));
         }
 
-        $grid->setActionRoute($browseRouteData['route'] . "_data", $browseRouteData['params'] );
-        $grid->setDefaultRouteParams( $this->getDefaultRouteParams() );
+        $grid->setActionRoute($browseRouteData['route'] . "_data", $browseRouteData['params']);
+        $grid->setDefaultRouteParams($this->getDefaultRouteParams());
+
+        if ( $grid->hasActionColumn() ){
+            if (  $grid->getActionColumn()->hasAction('update')) {
+                if (is_null($updateRouteData)) {
+                    throw new \Exception('La instancia de la grilla tiene definida la acción de "Edición" pero no se definió la ruta al controller. Redefinió el metodo getUpdateRoute() en su controlador?');
+                } else {
+                    $grid->setUpdateRoute($updateRouteData['route'], $updateRouteData['params']);
+                }
+            }
+
+            if ($grid->getActionColumn()->hasAction('delete')) {
+                if (is_null($deleteRouteData)) {
+                    throw new \Exception('La instancia de la grilla tiene definida la acción de "Eliminación" pero no se definió la ruta al controller. Redefinió el metodo getDeleteRoute() en su controlador?');
+                } else {
+                    $grid->setdeleteRoute($deleteRouteData['route'], $deleteRouteData['params']);
+                }
+            }            
+        }
         
-        if( $grid->getActionColumn()->hasAction('update') ){
-	    	if( is_null($updateRouteData) ){
-				throw new \Exception('La instancia de la grilla tiene definida la acción de "Edición" pero no se definió la ruta al controller. Redefinió el metodo getUpdateRoute() en su controlador?');
-			}else{
-	            $grid->setUpdateRoute($updateRouteData['route'], $updateRouteData['params']);
-			}
-        }
-
-		if( $grid->getActionColumn()->hasAction('delete') ){
-	    	if( is_null($deleteRouteData) ){
-				throw new \Exception('La instancia de la grilla tiene definida la acción de "Eliminación" pero no se definió la ruta al controller. Redefinió el metodo getDeleteRoute() en su controlador?');
-			}else{
-	            $grid->setdeleteRoute($deleteRouteData['route'], $deleteRouteData['params']);
-			}
-        }
-
         return $grid;
-    }    
-    
+    }
+
     public function browseAction(Request $request)
     {
         $this->addBreadcrumbItem($this->getBrowseActionTitle(), $this->getBrowseRouteData());
-       
+
         $grid = $this->getGrid();
-        
+
         $this->processFilterForm($this->getRequest(), $grid);
-                
-        $gridView = $grid->createView();                      
+
+        $gridView = $grid->createView();
 
         return $this->renderBrowseView(
-                array(
-                    'grid' => $gridView,
-                )
+                        array(
+                            'grid' => $gridView,
+                        )
         );
     }
 
@@ -246,9 +249,9 @@ abstract class ABMController extends Controller
         if ($this->container->get('request')->isXmlHttpRequest()) {
 
             $grid = $this->getGrid();
-            
+
             $this->processFilterForm($this->getRequest(), $grid);
-            
+
             $gridView = $grid->createView();
 
             return $this->render(
@@ -261,74 +264,74 @@ abstract class ABMController extends Controller
 
     protected function getFormRedirectRouteData()
     {
-        if ( $this->getBreadcrumb()->offsetExists( $this->getBreadcrumb()->count() - 2 ) ){
-            $item = $this->getBreadcrumb()->get( $this->getBreadcrumb()->count() - 2 );
-            $routeData = $item->getRouteData();    
-        }else{
-            $routeData = $this->getBrowseRouteData(); 
-        }            
+        if ($this->getBreadcrumb()->offsetExists($this->getBreadcrumb()->count() - 2)) {
+            $item = $this->getBreadcrumb()->get($this->getBreadcrumb()->count() - 2);
+            $routeData = $item->getRouteData();
+        } else {
+            $routeData = $this->getBrowseRouteData();
+        }
         return $routeData;
     }
-    
+
     public function processForm($form, Request $request, $entity)
-    {        
+    {
         $form->bindRequest($request);
 
         if ($form->isValid()) {
-        
+
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($entity);
             $em->flush();
-            
+
             return true;
-        }else{
+        } else {
             return false;
         }
     }
-    
+
     public function insertAction(Request $request)
-    {       
+    {
         $entity = $this->getEntityInstance();
 
         $form = $this->createForm($this->getForm(), $entity);
-                        
+
         if ($request->request->has('_form_method') && ($request->request->get('_form_method') == 'POST')) {
 
             $valid = $this->processForm($form, $request, $entity);
-            
-            if ($valid) {                
-                return $this->internalRedirect( $this->getFormRedirectRouteData() );
+
+            if ($valid) {
+                return $this->internalRedirect($this->getFormRedirectRouteData());
             } else {
                 return $this->renderInsertView(array('form' => $form->createView()));
-            }            
+            }
         }
-        
+
         $this->addBreadcrumbItem($this->getInsertActionTitle(), $this->getInsertRouteData());
 
-        return $this->renderInsertView( array('form' => $form->createView()));        
+        return $this->renderInsertView(array('form' => $form->createView()));
     }
-    
+
     public function updateAction(Request $request, $id)
     {
-        $entity = $this->getDoctrine()->getRepository( $this->getRepositoryName() )->find($id);
+        $entity = $this->getDoctrine()->getRepository($this->getRepositoryName())->find($id);
 
         $form = $this->createForm($this->getForm(), $entity);
 
         if ($request->request->has('_form_method') && ($request->request->get('_form_method') == 'POST')) {
             $valid = $this->processForm($form, $request, $entity);
-            
-            if ($valid) {                
-                return $this->internalRedirect( $this->getFormRedirectRouteData() );
+
+            if ($valid) {
+                return $this->internalRedirect($this->getFormRedirectRouteData());
             } else {
                 return $this->renderUpdateView(array('form' => $form->createView()));
             }
         }
-        
+
         $this->addBreadcrumbItem($this->getUpdateActionTitle(), $this->getUpdateRouteData());
 
         return $this->renderUpdateView(array('form' => $form->createView()));
     }
-    
+
     public function deleteAction(Request $request, $id)
     {
         if (!($request->getMethod() == 'POST'))
@@ -341,24 +344,24 @@ abstract class ABMController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($entity);
         $em->flush();
-            
-        return $this->internalRedirect( $this->getDeleteActionRedirectRouteData() );
-    }    
+
+        return $this->internalRedirect($this->getDeleteActionRedirectRouteData());
+    }
 
     /**
      * Devuelve el par (ruta, params) a procesar luego de un deleteAction 
-     */    
+     */
     protected function getDeleteActionRedirectRouteData()
     {
-        if ( $this->getBreadcrumb()->offsetExists( $this->getBreadcrumb()->count() - 1 ) ){
-            $item = $this->getBreadcrumb()->get( $this->getBreadcrumb()->count() - 1 );
-            $routeData = $item->getRouteData();    
-        }else{
-            $routeData = $this->getBrowseRouteData(); 
-        }            
+        if ($this->getBreadcrumb()->offsetExists($this->getBreadcrumb()->count() - 1)) {
+            $item = $this->getBreadcrumb()->get($this->getBreadcrumb()->count() - 1);
+            $routeData = $item->getRouteData();
+        } else {
+            $routeData = $this->getBrowseRouteData();
+        }
         return $routeData;
     }
-    
+
     /**
      * Procesa el formulario de filtro y establece el criterio de la
      * grilla.
@@ -370,26 +373,25 @@ abstract class ABMController extends Controller
      * @param Grid $grid Grilla del abm
      */
     public function processFilterForm(Request $request, Grid $grid)
-    {       
+    {
         $filterForm = $this->getFilterForm();
-     
+
         if ($filterForm) {
-            
-            if ($request->query->get($filterForm->getName())){
-                
+
+            if ($request->query->get($filterForm->getName())) {
+
                 $filterForm->bindRequest($this->getRequest());
 
-                if ($filterForm->isValid()) {                    
+                if ($filterForm->isValid()) {
                     $grid->setCriteria($filterForm->getData());
                     $actionRoute = $grid->getActionRoute();
                     $actionRoute['params'][$filterForm->getName()] = $request->query->get($filterForm->getName());
-                    $grid->setActionRoute($actionRoute['route'], $actionRoute['params']);                    
+                    $grid->setActionRoute($actionRoute['route'], $actionRoute['params']);
                 }
-                
-            }            
-        }                 
+            }
+        }
     }
-    
+
     /**
      * Devuelve la instancia del formulario de filtro del abm.
      * 
@@ -403,7 +405,7 @@ abstract class ABMController extends Controller
     {
         return null;
     }
-    
+
     /**
      * Devuelve el formulario de filtro para este abm.
      * 
@@ -417,21 +419,19 @@ abstract class ABMController extends Controller
     {
         if (!$this->filterForm)
             $this->filterForm = $this->getFilterFormInstance();
-        
+
         return $this->filterForm;
     }
 
     protected function renderInsertView(array $params)
     {
         return $this->render(
-                $this->getInsertTemplateName(), 
-                array_merge(
-                    $params, 
-                    $this->getInsertViewParams()
-                )
+                        $this->getInsertTemplateName(), array_merge(
+                                $params, $this->getInsertViewParams()
+                        )
         );
     }
-    
+
     protected function getInsertViewParams()
     {
         return array(
@@ -447,14 +447,12 @@ abstract class ABMController extends Controller
     protected function renderUpdateView(array $params)
     {
         return $this->render(
-                $this->getUpdateTemplateName(), 
-                array_merge(
-                    $params, 
-                    $this->getUpdateViewParams()
-                )
+                        $this->getUpdateTemplateName(), array_merge(
+                                $params, $this->getUpdateViewParams()
+                        )
         );
     }
-    
+
     protected function getUpdateViewParams()
     {
         return array(
@@ -466,42 +464,40 @@ abstract class ABMController extends Controller
             'breadcrumb' => $this->getBreadcrumb()->createView()
         );
     }
-    
+
     protected function renderBrowseView(array $params)
     {
         return $this->render(
-                $this->getBrowseTemplateName(), 
-                array_merge(
-                    $params, 
-                    $this->getBrowseViewParams()
-                )
+                        $this->getBrowseTemplateName(), array_merge(
+                                $params, $this->getBrowseViewParams()
+                        )
         );
-    }    
-    
+    }
+
     protected function getBrowseViewParams()
     {
         $params = array(
-                'parentTemplateName' => $this->getParentTemplateName(),
-                'pluralEntityName' => $this->getPluralEntityName(),
-                'title' => $this->getBrowseActionTitle(),
-                'defaultRouteParams' => $this->getDefaultRouteParams(),
-                'breadcrumb' => $this->getBreadcrumb()->createView(),
-                );
-        
-        $insertRouteData = $this->getInsertRouteData(); 
-        if ( $insertRouteData ) {
+            'parentTemplateName' => $this->getParentTemplateName(),
+            'pluralEntityName' => $this->getPluralEntityName(),
+            'title' => $this->getBrowseActionTitle(),
+            'defaultRouteParams' => $this->getDefaultRouteParams(),
+            'breadcrumb' => $this->getBreadcrumb()->createView(),
+        );
+
+        $insertRouteData = $this->getInsertRouteData();
+        if ($insertRouteData) {
             $params['insertRouteName'] = $insertRouteData['route'];
             $params['insertRouteParams'] = $insertRouteData['params'];
         }
-        
+
         if ($this->getFilterForm()) {
             $browseRouteData = $this->getBrowseRouteData();
-            $params['browseRouteName'] = $browseRouteData['route'];            
-            $params['browseRouteParams'] = $browseRouteData['params'];            
-            $params['filterForm'] = $this->getFilterForm()->createView();            
-        }                
-        
-        return $params;        
+            $params['browseRouteName'] = $browseRouteData['route'];
+            $params['browseRouteParams'] = $browseRouteData['params'];
+            $params['filterForm'] = $this->getFilterForm()->createView();
+        }
+
+        return $params;
     }
-         
+
 }
