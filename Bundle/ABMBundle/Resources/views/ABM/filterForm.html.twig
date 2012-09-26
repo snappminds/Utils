@@ -1,0 +1,16 @@
+    <div class='filterSection'>
+        
+        {% block SnappmindsUtilsABMBundle_ABM_filter_title %}
+        <h2>Busqueda</h2>
+        {% endblock %}
+        <form action="{{ path(browseRouteName, browseRouteParams) }}" method="get" {{ form_enctype(filterForm) }}>            
+            <div class='filterForm'>
+                
+                {{ form_widget(filterForm) }}
+
+                <fieldset>
+                    <input type="submit" value='Aceptar'/>                    
+                </fieldset>            
+            </div>
+        </form>
+    </div>
