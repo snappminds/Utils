@@ -82,7 +82,7 @@
 {# -------------------------------------------------- grid_data -------------------------------------------------- #}
 {% block data %}
     {% for row in grid.vars.rows %}
-        <tr>
+        <tr class='{{ cycle(['even','odd'],loop.index) }}'>
             {% for column in grid.vars.columns %}			
                 <td>{{ grid_cell(column, row[column.vars.name], grid) }}</td>
             {% endfor %}
