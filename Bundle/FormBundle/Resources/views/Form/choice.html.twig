@@ -51,14 +51,14 @@
             widget.initialize('{{ id }}', '{{ path(data_route.route, data_route.params) }}', '{{ data_param }}');            
         });
         </script>
-        <span class='snappminds_utils_form_type_choice' id="{{ id }}">
+        <div class='snappminds_utils_form_type_choice' id="{{ id }}">
             <input id="{{ id }}_value" name="{{ full_name }}" type="hidden" value='{{ value }}'/>
             <input id="{{ id }}_entry" type="text" autocomplete="off" value = "{{ value_label }}"/>
             <div class="snappminds_utils_form_type_choice_choicelist-container">
                 <ul class="snappminds_utils_form_type_choice_choicelist">
                 </ul>
             </div>
-        </span>
+        </div>
         {% else %}
             {#
                 Choice editable sin funcionalidades AJAX.
