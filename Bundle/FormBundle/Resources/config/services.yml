@@ -6,6 +6,7 @@ parameters:
   form.type.predicttext.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\PredictTextType
   form.type.entitypredicttext.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\EntityPredictTextType
   form.type.entitycontainer.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\EntityContainerType
+  form.type.date.class: Snappminds\Utils\Bundle\FormBundle\Form\Extension\Type\DateType
 services:
 #    snappminds_utils_form.example:
 #        class: %snappminds_utils_form.example.class%
@@ -38,3 +39,8 @@ services:
     arguments: [@doctrine]
     tags:
       - { name: form.type, alias: entitycontainer }
+  form.type.date:
+    class: %form.type.date.class%    
+    tags:
+      - { name: form.type, alias: date }
+

@@ -1,0 +1,42 @@
+{% block date_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' snappminds_utils_form_widget_date'}) %}
+    {% if widget == 'single_text' %}
+        <script>
+            $(function($) {
+                var options;                
+                options = $.datepicker.regional['es'];
+                
+                {% if changeMonth %}
+                options.changeMonth = true;
+                {% endif %}
+                    
+                 {% if changeYear %}
+                options.changeYear = true;
+                {% endif %}
+                    
+                {% if yearRange is not null %}
+                options.yearRange = "{{ yearRange }}";
+                {% endif %}
+     
+                $( "#{{ form.vars.id  }}" ).datepicker(options);
+
+            });            
+        </script>
+
+        {{ block('field_widget') }}
+    {% else %}
+
+        <input type="text" {{ block('widget_container_attributes') }} />
+        {#
+        <div {{ block('widget_container_attributes') }}>            
+            {{ date_pattern|replace({
+                '{{ year }}':  form_widget(form.year),
+                '{{ month }}': form_widget(form.month),
+                '{{ day }}':   form_widget(form.day),
+            })|raw }}
+        </div>
+        #}
+    {% endif %}
+{% endspaceless %}
+{% endblock date_widget %}

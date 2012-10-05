@@ -4,3 +4,8 @@
 {% javascripts '@SnappmindsUtilsFormBundle/Resources/public/js/Type/PredictText/PredictText.js' %}
 	<script src="{{ asset_url }}" ></script>
 {% endjavascripts %}
+<script>
+    $(function($) {
+        $.datepicker.setDefaults($.datepicker.regional["es"]);
+    });            
+</script>        
