@@ -155,6 +155,7 @@ Snappminds.Utils.Form.Type.Choice.prototype.getValueInput = function() {
 
 Snappminds.Utils.Form.Type.Choice.prototype.setValue = function(value) {
     this.getValueInput().val(value);
+    this.trigger("change");
 }
 
 Snappminds.Utils.Form.Type.Choice.prototype.getValue = function() {
@@ -191,7 +192,7 @@ Snappminds.Utils.Form.Type.Choice.prototype.setSelectedIndex = function(value) {
 
     var suggestionHeight = $(this.getChoices()[0]).height();
     var boxHeight = this.getChoiceListContainer().height();
-    this.getChoiceListContainer().scrollTop(value * suggestionHeight - boxHeight / 2);
+    this.getChoiceListContainer().scrollTop(value * suggestionHeight - boxHeight / 2);    
 }
 
 Snappminds.Utils.Form.Type.Choice.prototype.getSelectedIndex = function() {

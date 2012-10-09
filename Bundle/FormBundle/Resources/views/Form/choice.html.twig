@@ -17,26 +17,6 @@
             {#
                 Choice editable con funcionalidades AJAX.
             #}
-<style>
-    .snappminds_utils_form_type_choice_choicelist-container
-    {
-        height: 100px;
-        margin-bottom: -100px;
-        border: 1px solid #000;
-        overflow: scroll;
-        display: none;
-        background-color: #FFF;
-        position: relative;
-    }
-    .snappminds_utils_form_type_choice_choice
-    {
-        cursor: pointer;
-    }
-    .snappminds_utils_form_type_choice_choice_selected
-    {
-        background-color: lightsteelblue;
-    }
-    </style>
     <script>
         var {{ id }};
         $(document).ready(function() {
@@ -87,7 +67,6 @@
 
                             var url = '{{ path(data_route.route, data_route.params) }}';
 
-
                             //Realizar llamada ajax
                             $.ajax({
                                 url: url,
@@ -106,7 +85,6 @@
                 );
 
                 widget.refresh();
-
             });
             </script>
             <select {{ block('widget_attributes') }}>
