@@ -94,6 +94,10 @@
     {{ value|date('d/m/Y H:i') }}
 {% endblock %}
 
+{% block datecolumn_cell %}
+    {{ value|date('d/m/Y') }}
+{% endblock %}
+
 {% block timecolumn_cell %}
     {{ value|date('H:i') }}
 {% endblock %}

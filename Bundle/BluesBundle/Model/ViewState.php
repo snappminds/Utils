@@ -29,8 +29,9 @@ class ViewState
         if( $request->request->has( self::REQUEST_PARAM_NAME ) ){
             $data = unserialize( urldecode( $request->request->get( self::REQUEST_PARAM_NAME )) );
         }elseif( $request->query->has( self::REQUEST_PARAM_NAME ) ){
-            $data = $session->get( $request->query->get( self::REQUEST_PARAM_NAME ) );
-            //$session->remove( $request->query->get( self::REQUEST_PARAM_NAME ) );
+            if( $session->has($request->query->get( self::REQUEST_PARAM_NAME )) ){
+                $data = $session->get( $request->query->get( self::REQUEST_PARAM_NAME ) );                
+            }
         }        
         
         $viewState->setData( $data );
