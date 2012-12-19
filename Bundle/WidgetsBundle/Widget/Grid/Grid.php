@@ -53,7 +53,7 @@ abstract class Grid
 
     protected function initializeFromStateData($stateData)
     {
-        if ($stateData->has('page')) {
+        if ($stateData->has('page')) {           
             $this->setCurrentPage($stateData->get('page'));
         } else {
             $this->setCurrentPage(1);
@@ -227,7 +227,7 @@ abstract class Grid
         }else{
             $firstRowNumber = ($this->getCurrentPage() - 1) * $this->getRowsPerPage() + 1;    
             $lastRowNumber = $firstRowNumber + count($rows) - 1; 
-            $currentPage = $this->getCurrentPage();
+            $currentPage = $this->getCurrentPage();                        
         }
         
         $view = new View();
