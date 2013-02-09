@@ -7,14 +7,18 @@
 {% endblock %}
 
 {% block content %}        
-
+        
         {{ breadcrumb_widget( breadcrumb ) }}
 
         {% block SnappmindsUtilsABMBundle_ABM_header %}
-            <h1>{% block SnappmindsUtilsABMBundle_ABM_title %}{% endblock %}</h1>
+            <h1 class='snappminds_utils_abmbundle_abm_title'>{% block SnappmindsUtilsABMBundle_ABM_title %}{% endblock %}</h1>
         {% endblock %}
+
+        <div class='snappminds_utils_abmbundle_abm_body'>
         {% block SnappmindsUtilsABMBundle_ABM_body %}
         {% endblock %}
+        </div>
+            
 {% endblock %}
 
 {% block flash_messages %}
