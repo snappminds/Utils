@@ -92,7 +92,8 @@
         {% else %}
             {% spaceless %}
                 {% if expanded %}
-            <div {{ block('widget_container_attributes') }}>
+
+                <div {{ block('widget_container_attributes') }}>
                     {% for child in form %}
                         {{ form_widget(child) }}
                         {{ form_label(child) }}
