@@ -6,6 +6,8 @@
     
     {{ form_widget(form) }}
     
-    <input type="submit" value='Aceptar'/>
-    <input type="button" value='Volver' onclick="javascript: window.location='{{ path(returnRouteData.route, returnRouteData.params) }}'"/>    
+	<div class='{{ form.vars.id }}_form_buttons'>
+		<input type="submit" value='Aceptar'/>
+		<input type="button" value='Volver' onclick="javascript: window.location='{{ path(returnRouteData.route, returnRouteData.params) }}'"/>    
+	</div>
 </form>
