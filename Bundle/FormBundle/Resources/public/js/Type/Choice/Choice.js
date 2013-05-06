@@ -70,56 +70,21 @@ Snappminds.Utils.Form.Type.Choice.prototype.getCssPrefix = function() {
 }
 
 Snappminds.Utils.Form.Type.Choice.prototype.onKeyUp = function(e) {                    
-    switch (e.keyCode) {
-        case 27:
-            if (this.getChoiceListContainer().is(':visible')) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-
-        case 13:
-            if (this.getChoiceListContainer().is(':visible')) {                            
-                //Prevenir submit al presionar ENTER
-                e.preventDefault();
-            }
-            break;
-    }                    
-}
-
-Snappminds.Utils.Form.Type.Choice.prototype.onKeyDown = function(e) {
-    switch (e.keyCode) {
-        case 27:
-            if (this.getChoiceListContainer().is(':visible')) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-            break;
-        case 13:
-            if (this.getChoiceListContainer().is(':visible')) {
-                //Prevenir submit al presionar ENTER
-                e.preventDefault();
-            }
-            break;
-    }
-
-}
-
-Snappminds.Utils.Form.Type.Choice.prototype.onKeyPress = function(e) {
-
-    switch (e.keyCode) {
+switch (e.keyCode) {
+        case 8: //BACKSPACE            
+                if (!this.timer) {                        
+                    this.timer = setTimeout($.proxy(function() {                            
+                        this.refresh();
+                        clearTimeout(this.timer);
+                        this.timer = null;                    
+                    }, this), 500);
+                }
+            break;                
         case 27:
             if (this.getChoiceListContainer().is(':visible')) {
                 this.getChoiceListContainer().fadeOut();
                 e.preventDefault();
                 e.stopPropagation();
-            }            
-            break;
-        case 13:
-            if (this.getChoiceListContainer().is(':visible')) {
-                //Aplicar la selección del usuario
-                this.applySelection();
-                //Prevenir submit al presionar ENTER
-                e.preventDefault();
             }
             break;
         case 38: //UP
@@ -130,12 +95,42 @@ Snappminds.Utils.Form.Type.Choice.prototype.onKeyPress = function(e) {
             //Cambiar selección hacia abajo
             this.setSelectedIndex(this.getSelectedIndex() + 1);
             break;
+         default:
+            break;            
+    }
+}
+
+Snappminds.Utils.Form.Type.Choice.prototype.onKeyDown = function(e) {
+switch (e.keyCode) {
+        case 13:
+            if (this.getChoiceListContainer().is(':visible')) {
+                //Aplicar la selección del usuario
+                this.applySelection();                
+                //Prevenir submit al presionar ENTER
+                e.preventDefault();
+            }
+            break;
+         default:
+            break;            
+    }
+    
+}
+
+Snappminds.Utils.Form.Type.Choice.prototype.onKeyPress = function(e) {
+
+    switch (e.keyCode) {
+        case 8:  //BACKSPACE
+        case 27:
+        case 13:
+        case 38: //UP            
+        case 40: //DOWN
+            break;
         default:
             /* 
                 Para evitar demasiado overloading al server,
                 la lista se refresca solo cada 500ms.
             */
-            if (e.charCode || e.keyCode == 8) {
+            if (e.charCode) {
                 if (!this.timer) {                        
                     this.timer = setTimeout($.proxy(function() {                            
                         this.refresh();
@@ -145,8 +140,7 @@ Snappminds.Utils.Form.Type.Choice.prototype.onKeyPress = function(e) {
                 }
             }
             break;
-
-    }                    
+   }                    
 }
 
 Snappminds.Utils.Form.Type.Choice.prototype.getValueInput = function() {
